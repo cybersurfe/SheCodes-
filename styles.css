@@ -1,10 +1,11 @@
 body {
-  background: #f9f7fe;
-  font-family: "Roboto", sans-serif;
+  background: #e0d7c3;
+  font-family: "times";
+  color: #684106;
 }
 
 a {
-  color: #885df1;
+  color: #684106;
 }
 
 .weather-app {
@@ -22,6 +23,7 @@ header {
 }
 
 .search-input {
+  font-family: "times";
   background-color: #f9f7fe;
   border: none;
   color: rgba(39, 33, 66, 0.4);
@@ -32,12 +34,17 @@ header {
 }
 
 .search-button {
+  font-family: "times";
   margin-left: 5px;
   font-size: 16px;
-  background-color: #885df1;
+  background-color: #684106;
   color: white;
   border: none;
-  padding: 20px;
+  padding-left: 45px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-right: 45px;
+  text-align: center;
   line-height: 1;
   border-radius: 5px;
 }
@@ -73,7 +80,7 @@ main {
 
 .current-temperature-icon {
   position: relative;
-  top: -8px;
+  top: 20px;
   font-size: 40px;
   margin-right: 10px;
 }
