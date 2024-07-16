@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentDate = new Date(response.data.time * 1000);
     let currentDateElement = document.querySelector(".date");
     currentDateElement.innerHTML = formatDate(currentDate);
+
+    updateForecast(response.data.city);
   }
 
   function formatDate(date) {
@@ -72,9 +74,50 @@ document.addEventListener("DOMContentLoaded", function () {
     return `${month[months]} ${dates}, ${daysOfTheWeek[day]} ${hours}:${mins}`;
   }
 
+  function formatNewDate(date) {
+    const daysOfTheWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+    let day = date.getDay();
+
+    return `${daysOfTheWeek[day]}`;
+  }
+
+  function updateForecast(city) {
+    let url = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=08863bfbdoc74bb4a127ab6ba62t6fb6&units=metric`;
+    axios.get(url).then(forecastUpdate);
+  }
+
+  function forecastUpdate(response) {
+    let data = response.data;
+    let forecast = "";
+
+    for (let i = 0; i < 5; i++) {
+      let playDate = new Date(data.daily[i].time * 1000);
+      forecast += `
+      <div class="weather-forecast-${i + 1}">
+        <div class="forecast-date-${i + 1}">
+          ${formatNewDate(playDate)}
+        </div>
+        <div class="forecast-icon-${i + 1}">
+          <img src="${data.daily[i].condition.icon_url}" alt="${
+        data.daily[i].condition.description
+      }">
+        </div>
+        <div class="forecast-temp-${i + 1}">
+          <strong>${Math.round(
+            data.daily[i].temperature.maximum
+          )}°C / ${Math.round(data.daily[i].temperature.minimum)}°C</strong>
+        </div>
+      </div>`;
+    }
+
+    let forecastUpdateElement = document.querySelector(".forecast");
+    forecastUpdateElement.innerHTML = forecast;
+  }
+
   function updateCity(event) {
     event.preventDefault();
-    let input = document.querySelector(".search-input").value || "bloemfontein"; // Default city
+    let input = document.querySelector(".search-input").value || "Bloemfontein"; // Default city
     let capitalizedInput = capitalizeFirstLetter(input);
     let cityElement = document.querySelector(".current-city");
     cityElement.innerHTML = capitalizedInput;
@@ -86,14 +129,13 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateInitialCity() {
     let city = "Pretoria";
     let cityEle = document.querySelector(".current-city");
-    cityEle.innerHTML = `${city}`;
+    cityEle.innerHTML = city;
 
-    let url = `https://api.shecodes.io/weather/v1/current?query=Pretoria&key=08863bfbdoc74bb4a127ab6ba62t6fb6&units=metric`;
+    let url = `https://api.shecodes.io/weather/v1/current?query=${city}&key=08863bfbdoc74bb4a127ab6ba62t6fb6&units=metric`;
     axios.get(url).then(updateWeather);
   }
 
   let searchForm = document.querySelector("form");
   searchForm.addEventListener("submit", updateCity);
   updateInitialCity();
-  updateCity();
 });
